@@ -1,0 +1,8 @@
+@namespace("com.example")
+protocol example_common {
+
+    record Status {
+        string? code = "code";
+        string? name = "name";
+    }
+}

@@ -1,0 +1,45 @@
+#reference your pipeline:
+#include:
+#  - project: 'pipelines/lib'
+#    ref: 'main'
+#    file:
+#      - 'stages/mvn-package.yaml'
+#      - 'stages/mvn-compile.yaml'
+#      - 'stages/mvn-nexus.yaml'
+
+stages:
+  - compile
+  - package
+  - nexus
+
+compile:
+  artifacts:
+    paths:
+      - src/main/resources/**
+
+package:
+  needs: [ 'compile', 'add-files' ]
+  dependencies: [ 'compile' ]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "test"'
+nexus:
+  needs: [ 'package' ]
+  dependencies: [ 'package' ]
+
+add-files:
+  stage: compile
+  needs: [ 'compile' ]
+  dependencies: [ 'compile' ]
+  script:
+    - 'git config --global user.email "$GITLAB_USER_EMAIL"'
+    - 'git config --global user.name "$GITLAB_USER_NAME"'
+    - echo "set config"
+    - git add src/main/resources/\*
+    - |-
+      CHANGES=$(git status --porcelain | wc -l)
+      if [ "$CHANGES" -gt "0" ]; then
+        git status
+        git commit -m "generated"
+        git push "https://$CI_TOKEN_NAME:$CI_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git" HEAD:$CI_COMMIT_REF_NAME -o ci.skip
+      fi
+  allow_failure: false

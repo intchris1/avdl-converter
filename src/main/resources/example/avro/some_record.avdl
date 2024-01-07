@@ -1,0 +1,19 @@
+@namespace("ru.beeline.ucp.assembler.agreement.from")
+protocol assembler_agreement_result {
+
+    import idl "../example.common.avdl";
+
+    record SomeRecord {
+        string eventId;
+        string eventTime;
+        Event event;
+    }
+
+    record Event {
+        string processId;
+        string taskId;
+        string? taskStartTime = null;
+        string? taskEndTime = null;
+        com.example.Status? status = null;
+    }
+}

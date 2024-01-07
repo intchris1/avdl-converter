@@ -1,0 +1,78 @@
+{
+  "type": "record",
+  "name": "SomeRecord",
+  "namespace": "ru.beeline.ucp.assembler.agreement.from",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"
+    },
+    {
+      "name": "eventTime",
+      "type": "string"
+    },
+    {
+      "name": "event",
+      "type": {
+        "type": "record",
+        "name": "Event",
+        "fields": [
+          {
+            "name": "processId",
+            "type": "string"
+          },
+          {
+            "name": "taskId",
+            "type": "string"
+          },
+          {
+            "name": "taskStartTime",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null
+          },
+          {
+            "name": "taskEndTime",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null
+          },
+          {
+            "name": "status",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "Status",
+                "namespace": "com.example",
+                "fields": [
+                  {
+                    "name": "code",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "default": "code"
+                  },
+                  {
+                    "name": "name",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "default": "name"
+                  }
+                ]
+              }
+            ],
+            "default": null
+          }
+        ]
+      }
+    }
+  ]
+}
